@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react'
+import React, { FormEvent, useState } from 'react'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
@@ -40,6 +40,9 @@ const htmlElements = {
 }
 
 export const Post = ({ author, content, publishedAt }: PostProps) => {
+  const [comments, setComments] = useState<string[]>([])
+  const [newCommentText, setNewCommentText] = useState('')
+
   const publishedDateFormatted = format(
     publishedAt,
     `d 'de' LLLL 'ás' HH:mm'h'`,
@@ -52,6 +55,14 @@ export const Post = ({ author, content, publishedAt }: PostProps) => {
     locale: ptBR,
     addSuffix: true
   })
+
+  const handleCreateNewComment = (event: FormEvent) => {
+    event.preventDefault()
+
+    setComments((prevState) => [...prevState, newCommentText])
+
+    setNewCommentText('')
+  }
 
   return (
     <article className={styles.wrapper}>
@@ -87,10 +98,18 @@ export const Post = ({ author, content, publishedAt }: PostProps) => {
       </main>
 
       <footer>
-        <form className={styles.commentForm}>
+        <form
+          onSubmit={handleCreateNewComment}
+          className={styles.commentForm}
+        >
           <strong>Deixe seu feedback</strong>
 
-          <textarea placeholder="Escreva um comentário..." />
+          <textarea
+            name="comment"
+            placeholder="Escreva um comentário..."
+            onChange={(event) => setNewCommentText(event.target.value)}
+            value={newCommentText}
+          />
 
           <div className={styles.buttonWrapper}>
             <button type="submit">Publicar</button>
@@ -98,7 +117,9 @@ export const Post = ({ author, content, publishedAt }: PostProps) => {
         </form>
 
         <div className={styles.commentList}>
-          <Comment />
+          {comments.map((comment) => (
+            <Comment key={comment} content={comment} />
+          ))}
         </div>
       </footer>
     </article>

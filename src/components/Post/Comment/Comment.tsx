@@ -4,7 +4,11 @@ import { Avatar } from '../../Avatar'
 
 import styles from './Comment.module.css'
 
-export const Comment = () => {
+type CommentProps = {
+  content: string
+}
+
+export const Comment = ({ content }: CommentProps) => {
   return (
     <div className={styles.wrapper}>
       <Avatar hasBorder={false} src="https://github.com/orenatodos.png" />
@@ -27,7 +31,7 @@ export const Comment = () => {
             </button>
           </header>
 
-          <p>Muito bom Devon, parabéns!! 👏👏</p>
+          <p>{content}</p>
         </div>
 
         <footer>
