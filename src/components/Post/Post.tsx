@@ -64,6 +64,14 @@ export const Post = ({ author, content, publishedAt }: PostProps) => {
     setNewCommentText('')
   }
 
+  const deleteComment = (commentToDelete: string) => {
+    const commentsWhitoutDeletedOne = comments.filter(
+      (comment) => comment !== commentToDelete
+    )
+
+    setComments(commentsWhitoutDeletedOne)
+  }
+
   return (
     <article className={styles.wrapper}>
       <header>
@@ -118,7 +126,11 @@ export const Post = ({ author, content, publishedAt }: PostProps) => {
 
         <div className={styles.commentList}>
           {comments.map((comment) => (
-            <Comment key={comment} content={comment} />
+            <Comment
+              key={comment}
+              content={comment}
+              onDeleteComment={deleteComment}
+            />
           ))}
         </div>
       </footer>

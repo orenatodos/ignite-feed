@@ -6,9 +6,14 @@ import styles from './Comment.module.css'
 
 type CommentProps = {
   content: string
+  onDeleteComment(comment: string): void
 }
 
-export const Comment = ({ content }: CommentProps) => {
+export const Comment = ({ content, onDeleteComment }: CommentProps) => {
+  const handleDeleteComment = () => {
+    onDeleteComment(content)
+  }
+
   return (
     <div className={styles.wrapper}>
       <Avatar hasBorder={false} src="https://github.com/orenatodos.png" />
@@ -26,7 +31,10 @@ export const Comment = ({ content }: CommentProps) => {
               </time>
             </div>
 
-            <button title="Deletar comentário">
+            <button
+              title="Deletar comentário"
+              onClick={handleDeleteComment}
+            >
               <Trash size={24} />
             </button>
           </header>
