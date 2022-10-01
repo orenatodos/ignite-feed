@@ -1,4 +1,9 @@
-import React, { FormEvent, useState } from 'react'
+import React, {
+  ChangeEvent,
+  FormEvent,
+  InvalidEvent,
+  useState
+} from 'react'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
@@ -56,6 +61,19 @@ export const Post = ({ author, content, publishedAt }: PostProps) => {
     addSuffix: true
   })
 
+  const handleNewCommentChange = (
+    event: ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    event.target.setCustomValidity('')
+    setNewCommentText(event.target.value)
+  }
+
+  const handleNewCommentInvalid = (
+    event: InvalidEvent<HTMLTextAreaElement>
+  ) => {
+    event.target.setCustomValidity('Esse campo é obrigatório')
+  }
+
   const handleCreateNewComment = (event: FormEvent) => {
     event.preventDefault()
 
@@ -71,6 +89,8 @@ export const Post = ({ author, content, publishedAt }: PostProps) => {
 
     setComments(commentsWhitoutDeletedOne)
   }
+
+  const isNewCommentEmpty = !newCommentText
 
   return (
     <article className={styles.wrapper}>
@@ -115,12 +135,16 @@ export const Post = ({ author, content, publishedAt }: PostProps) => {
           <textarea
             name="comment"
             placeholder="Escreva um comentário..."
-            onChange={(event) => setNewCommentText(event.target.value)}
+            onChange={handleNewCommentChange}
             value={newCommentText}
+            required
+            onInvalid={handleNewCommentInvalid}
           />
 
           <div className={styles.buttonWrapper}>
-            <button type="submit">Publicar</button>
+            <button type="submit" disabled={isNewCommentEmpty}>
+              Publicar
+            </button>
           </div>
         </form>
 
